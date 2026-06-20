@@ -1,5 +1,6 @@
 ﻿using Dsw2026Ej15.Api.Models;
 using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Domain.Exceptions;
 using Dsw2026Ej15.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,24 +16,24 @@ public class DoctorsController : AppController
     }
 
     [HttpPost("doctors")]
-    public async Task<IActionResult> CreateDoctor(DoctorModel.Request request)
+    public IActionResult CreateDoctor(DoctorModel.Request request)
     {
-        if(string.IsNullOrWhiteSpace(request.Name) ||
-            string.IsNullOrWhiteSpace(request.LicenseNumber))
-        {
-            return BadRequest("Nombre y matricula son requeridos");
-        }
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ValidationException("El nombre es requerido.");
+
+        if (string.IsNullOrWhiteSpace(request.LicenseNumber))
+            throw new ValidationException("El número de matrícula es requerido.");
 
         var speciality = _persistence.GetSpecialityById(request.SpecialityId);
-        if(speciality is null)
-        {
-            return BadRequest("Especialidad no existe");
-        }
+        if (speciality is null)
+            throw new ValidationException("La especialidad indicada no existe.");
 
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
         _persistence.AddDoctor(doctor);
-    
-        return Created();
+
+        var response = new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, speciality.Name);
+
+        return CreatedAtAction(nameof(GetDoctor), new { id = doctor.Id }, response);
     }
 
     [HttpGet("doctors")]
@@ -40,7 +41,8 @@ public class DoctorsController : AppController
     {
         var doctors = _persistence
             .GetAllDoctor()
-            .Where(d => d.IsActive);
+            .Where(d => d.IsActive)
+            .Select(d => new DoctorModel.Response(d.Name, d.LicenseNumber, d.Speciality!.Name));
 
         return Ok(doctors);
     }
