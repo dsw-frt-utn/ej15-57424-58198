@@ -1,8 +1,7 @@
 ﻿using Dsw2026Ej15.Data.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Domain.Interfaces;
+using System.Linq;
 using System.Text.Json;
 namespace Dsw2026Ej15.Data;
 
@@ -34,5 +33,31 @@ public class PersistenceInMemory : IPersistence
         {
 
         }
+    }
+
+    public void AddDoctor(Doctor doctor)
+    {
+        _doctors.Add(doctor);
+    }
+
+    public List<Doctor> GetAllDoctor()
+    {
+        return _doctors;
+    }
+
+    public Doctor GetDoctor(Guid idDoctor)
+    {
+        return _doctors.First(d => d.Id == idDoctor);
+    }
+
+    public Speciality GetSpecialityById(Guid id)
+    {
+        return _specialities.First(s => s.Id == id);
+    }
+
+    public void DeleteDoctor(Guid idDoctor)
+    {
+        var doctor = GetDoctor(idDoctor);
+        _doctors.Remove(doctor);
     }
 }
