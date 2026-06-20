@@ -45,19 +45,22 @@ public class PersistenceInMemory : IPersistence
         return _doctors;
     }
 
-    public Doctor GetDoctor(Guid idDoctor)
+    public Doctor? GetDoctor(Guid idDoctor)
     {
-        return _doctors.First(d => d.Id == idDoctor);
+        return _doctors.FirstOrDefault(d => d.Id == idDoctor);
     }
 
-    public Speciality GetSpecialityById(Guid id)
+    public Speciality? GetSpecialityById(Guid id)
     {
-        return _specialities.First(s => s.Id == id);
+        return _specialities.FirstOrDefault(s => s.Id == id);
     }
 
     public void DeleteDoctor(Guid idDoctor)
     {
         var doctor = GetDoctor(idDoctor);
-        _doctors.Remove(doctor);
+        if(doctor is not null)
+        {
+            doctor.Deactivate();
+        }
     }
 }

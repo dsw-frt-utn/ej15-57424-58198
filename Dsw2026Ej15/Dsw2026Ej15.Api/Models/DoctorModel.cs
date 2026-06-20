@@ -1,7 +1,9 @@
 ﻿namespace Dsw2026Ej15.Api.Models
 {
-    internal record DoctorModel
+    public record DoctorModel
     {
-        internal record Request(string Name, string LicenseNumber, Guid SpecialityId);
+        public record Request(string Name, string LicenseNumber, Guid SpecialityId);
+
+        public record Response(string Name, string LicenseNumber, string SpecialityName);
     }
 }
