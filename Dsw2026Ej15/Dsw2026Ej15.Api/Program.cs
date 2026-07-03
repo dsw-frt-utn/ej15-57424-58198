@@ -17,6 +17,8 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
+
+
             builder.Services.AddHealthChecks();
 
             var app = builder.Build();
