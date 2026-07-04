@@ -27,15 +27,15 @@ public class ExceptionHandlingMiddleware
                 error = ex.Message
             });
         }
-        catch
+        catch (Exception ex)
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            context.Response.ContentType = "application/problem+json";
 
             await context.Response.WriteAsJsonAsync(new
             {
-                title = "Ocurrió un error inesperado.",
-                status = 500
+                message = ex.Message,
+                inner = ex.InnerException?.Message,
+                stack = ex.StackTrace
             });
         }
     }
