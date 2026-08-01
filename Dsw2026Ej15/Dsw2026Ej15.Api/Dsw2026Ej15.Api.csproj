@@ -16,4 +16,12 @@
     <ProjectReference Include="..\Dsw2026Ej15.Domain\Dsw2026Ej15.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Dsw2026Ej15.Data\Source\specialities.json"
+          Link="Source\specialities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
