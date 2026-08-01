@@ -17,22 +17,16 @@ public class PersistenceInMemory : IPersistence
 
     private void LoadSpecialities()
     {
-        try
-        {
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                "Sources", "specialities.json");
-            var json = File.ReadAllText(jsonPath);
-            var specialities = JsonSerializer.Deserialize<List<SpecialityDto>>(json,
-                new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                }) ?? [];
-            _specialities = [.. specialities.Select(s => new Speciality(s.Name, s.Description, s.Id))];
-        }
-        catch (Exception)
-        {
+        string jsonPath = Path.Combine(AppContext.BaseDirectory,
+            "Source", "specialities.json");
+        var json = File.ReadAllText(jsonPath);
+        var specialities = JsonSerializer.Deserialize<List<SpecialityDto>>(json,
+            new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? throw new JsonException("No se pudieron deserializar las especialidades.");
 
-        }
+        _specialities = [.. specialities.Select(s => new Speciality(s.Name, s.Description, s.Id))];
     }
 
     public void AddDoctor(Doctor doctor)
